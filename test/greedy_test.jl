@@ -6,6 +6,7 @@ using PowerModels,Plots,GraphRecipes,Graphs,LinearAlgebra,Random,FileIO,JLD2
 path = "test/data/networks/RTS_GMLC_risk.m"
 net = make_basic_network(parse_file(path))
 
+
 # # Load the 2021 wildfire risks
 risks = load("test/data/risks/risks_RTS_2021.jld2")["2021"]
 T = length(risks)
@@ -40,3 +41,7 @@ end
 # # Plot the results vs time
 time_plot = SP.plot_greedy_max_coverage(results_T)
 savefig(time_plot,"test/figures/RTS_greedy_max_coverage_time.pdf")
+
+# # plot the risk heatmap
+riskmap = SP.plot_network(net) #plot the risk heatmap
+savefig(riskmap,"test/figures/rts_heat_graph.pdf")

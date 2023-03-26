@@ -73,3 +73,21 @@ function plot_network(g::PowerNetworkGraph)
     
 end
 
+function plot_network(case_dict::Dict{String,Any})
+    n_bus = length(case_dict["bus"])
+    bus_names = [case_dict["bus"][string(i)]["name"] for i in 1:n_bus]
+    node_risks = [max(case_dict["bus"][string(i)]["power_risk"],0.1) for i in 1:n_bus]
+    Y = calc_basic_admittance_matrix(case_dict)
+    Y = Y - Diagonal(Y)
+    G = Graph(Y)
+    p = graphplot(
+        G,
+        node_weights=node_risks,
+       # markercolor = :darkgray,
+        curvature_scalar=0,
+        markercolor=get(cgrad(:thermal,node_risks./norm(node_risks)),node_risks./norm(node_risks))
+
+    )
+    return p
+end
+
