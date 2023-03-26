@@ -7,7 +7,7 @@ Given:
 
 Returns: the coverage of the strategy S
 """
-function coverage(S::Set;F=F,w=w)
+function coverage(S::Set,F::AbstractMatrix,w::AbstractVector)
 	N_E,N_V = size(F) #Detection matrix dimension (num_edges,num_nodes)
 	coverage = 0
 	for e in 1:N_E #for each sensor
@@ -28,23 +28,23 @@ end
 """
 Given a cardinality constraint `b`, and detection matrix `F`, find the greedy sensor submodular maximization solution that finds the 1 - 1/e approximate best sensor placement strategy.
 """
-function greedy_max_coverage(b::Integer;F=F)
+function greedy_max_coverage(F::AbstractMatrix,w::AbstractVector,b::Integer)
 	(N_E,N_V) = size(F) #Detection matrix dimension (num_edges,num_nodes)
 	iter_objective = [0.0] #Vector to track objective values
 	iter_coverage = [0.0] #Vector to track coverage values
 	S = Set() #Set of indeces to select
 	for i in 1:b #For i=1,..,b where |S| <= b
 		k_i = Set() #Initial guess for the maximizing index
-		objective = coverage(union(S,k_i)) - coverage(S) #Initialize the objective
+		objective = coverage(union(S,k_i),F,w) - coverage(S,F,w) #Initialize the objective
 		for j in 1:N_V #for each node index j
-            objective_j = coverage(union(S,j)) - coverage(S) #calc objective for node j
+            objective_j = coverage(union(S,j),F,w) - coverage(S,F,w) #calc objective for node j
             if objective_j > objective #If the objective at j is larger
                 objective = objective_j #Update the current best objective
                 k_i = j #Update the current maximizing index
             end
 		end
 		push!(iter_objective,objective) #Save the objective at this iteration
-		push!(iter_coverage,coverage(S)) #Save the coverage at this iteration
+		push!(iter_coverage,coverage(S,F,w)) #Save the coverage at this iteration
 		S = union(S,k_i) #Unionize the maximizing index with the current set
 	end
 	return iter_objective,iter_coverage,S

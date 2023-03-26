@@ -6,6 +6,7 @@ using Graphs
 using JuMP
 using Gurobi
 using Plots
+using LaTeXStrings
 using HiGHS
 using SparseArrays
 using LinearAlgebra
