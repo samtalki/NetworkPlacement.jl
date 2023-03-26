@@ -4,7 +4,6 @@ module SensorPlacement
 using PowerModels
 using Graphs
 using JuMP
-using Gurobi
 using Plots
 using LaTeXStrings
 using HiGHS

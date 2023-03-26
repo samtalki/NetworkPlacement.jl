@@ -2,7 +2,7 @@
 
 julia_version = "1.8.0"
 manifest_format = "2.0"
-project_hash = "b04e68d4a0f38f5062c15a8cce8e710911f29623"
+project_hash = "586f6a176a4063aa691686737a534dea438ccebc"
 
 [[deps.ASL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -395,12 +395,6 @@ git-tree-sha1 = "53bb909d1151e57e2484c3d1b53e19552b887fb2"
 uuid = "42e2da0e-8278-4e71-bc24-59509adca0fe"
 version = "1.0.2"
 
-[[deps.Gurobi]]
-deps = ["LazyArtifacts", "Libdl", "MathOptInterface"]
-git-tree-sha1 = "e180bacdea78d73a60841b796a9150460856a3df"
-uuid = "2e9cd046-0924-5485-92f1-d5272153d98b"
-version = "1.0.0"
-
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
 git-tree-sha1 = "37e4657cd56b11abe3d10cd4a1ec5fbdb4180263"
@@ -576,10 +570,6 @@ version = "0.15.18"
 git-tree-sha1 = "410fe4739a4b092f2ffe36fcb0dcc3ab12648ce1"
 uuid = "0e77f7df-68c5-4e49-93ce-4cd80f5598bf"
 version = "1.2.1"
-
-[[deps.LazyArtifacts]]
-deps = ["Artifacts", "Pkg"]
-uuid = "4af54fe1-eca0-43a8-85a7-787d91b784e3"
 
 [[deps.LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]
