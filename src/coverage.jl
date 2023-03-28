@@ -6,8 +6,10 @@ function build_coverage_data(case_dict::Dict,weights::Dict{Int,Float64})
     F = calc_basic_incidence_matrix(case_dict) #Calculate the basic incidence matrix
     (N_E,N_V) = size(A)
     w = zeros(N_E) #Criticality weights
-    for (bus_id,weight) in weights
-        w[bus_id] = weight
+    power_risks = get_power_risks(case_dict) #Get the power_risks for each branch
+    @assert length(power_risks) == N_E "Number of power_risks inconsistent with number of branches"
+    for (branch_id,weight) in weights
+        w[branch_id] = weight*power_risks[branch_id] #Set criticality weight
     end
     return F,w #return coverage matrix and weights
 end
@@ -20,14 +22,29 @@ function build_coverage_data(case_dict::Dict,weights_vector::Vector{Any})
     F = calc_basic_incidence_matrix(case_dict) #Calculate the basic incidence matrix
     (N_E,N_V) = size(F)
     W = zeros(N_E,length(weights_vector)) #Criticality weights as a function of time
+    power_risks = get_power_risks(case_dict) #Get the power_risks for each branch
     for (t,weights) in enumerate(weights_vector)
         w = zeros(length(weights))
-        for (bus_id,weight) in weights
-            w[bus_id] = weight
+        for (branch_id,weight) in weights
+            w[branch_id] = weight*power_risks[branch_id] #Set criticality weight
         end
         W[:,t] = w
     end
     return F,W #return coverage matrix and matrix of weights as a function of time, W ∈ ℝ^(N_E x T)
+end
+
+
+"""
+Gets the baseline power_risks for each branch in the graph
+"""
+function get_power_risks(case_dict::Dict)
+    n_branch = length(case_dict["branch"]) #Number of branches
+    power_risks = Dict() #Initialize the power_risks
+    for (branch_id_label,branch) in case_dict["branch"] #For each branch
+        branch_id = branch["index"] #Get the branch_id
+        power_risks[branch_id] = branch["power_risk"] #Set the power_risk
+    end
+    return power_risks
 end
 
 

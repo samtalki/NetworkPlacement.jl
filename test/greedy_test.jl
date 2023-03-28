@@ -35,13 +35,13 @@ t_select = 10 #random time to select risk value
 for b in b_values
     _iter_objective,_iter_coverage = results_T[t_select][b]["iter_objective"],results_T[t_select][b]["iter_coverage"]
     size_plot = SP.plot_greedy_max_coverage(_iter_objective,_iter_coverage)
-    savefig(size_plot,"test/figures/RTS_greedy_max_coverage_b"*string(b)*"_t_"*string(t_select)*".pdf")
+    savefig(size_plot,"test/figures/base_weighted_RTS_greedy_max_coverage_b"*string(b)*"_t_"*string(t_select)*".pdf")
 end
 
 # # Plot the results vs time
 time_plot = SP.plot_greedy_max_coverage(results_T)
-savefig(time_plot,"test/figures/RTS_greedy_max_coverage_time.pdf")
+savefig(time_plot,"test/figures/base_weighted_RTS_greedy_max_coverage_time.pdf")
 
 # # plot the risk heatmap
-riskmap = SP.plot_network(net) #plot the risk heatmap
-savefig(riskmap,"test/figures/rts_heat_graph.pdf")
+# riskmap = SP.plot_network(net) #plot the risk heatmap
+# savefig(riskmap,"test/figures/rts_heat_graph.pdf")
