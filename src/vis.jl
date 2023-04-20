@@ -4,7 +4,7 @@
 """
 Given coverage matrix F, weight vector w, and cardinality constraint `b` solve `greedy_max_coverage` and plot the results.
 """
-function plot_greedy_max_coverage(F,w,b)
+function plot_max_coverage(F,w,b)
     iter_objective,iter_coverage,S_best = greedy_max_coverage(F,w,b)
     plot(iter_objective,
         label=L"$F(S_{i-1} \cup \{k_i\}) - F(S_{i-1})$ (Objective)")
@@ -16,7 +16,7 @@ end
 """
 Given vector of coverage results vs. time, plot the greedy_max_coverage results.
 """
-function plot_greedy_max_coverage(results::Vector{Any})
+function plot_max_coverage(results::Vector{Any})
     
     num_strategy_sizes = length(results[1]) #length(b_1,b_2,b_3...)
     
@@ -42,7 +42,7 @@ end
 """
 Given objective and coverage iterations for `greedy_max_coverage`, plot the results vs. strategy size.
 """
-function plot_greedy_max_coverage(iter_objective::Vector{Float64},iter_coverage)
+function plot_max_coverage(iter_objective::Vector{Float64},iter_coverage)
     @assert length(iter_objective) == length(iter_coverage) "mismatch in objective and coverage vectors"
     b_max = length(iter_coverage) -1
     p1 = plot(0:b_max,iter_objective,
@@ -57,10 +57,10 @@ function plot_greedy_max_coverage(iter_objective::Vector{Float64},iter_coverage)
 end
 
 
-## IP alg
 
-
-## Visulize Graphs
+#-----------------#
+# Power Network Graphs
+#-----------------#
 """
 Plots a PowerNetworkGraph with GraphRecipes.jl
 """
