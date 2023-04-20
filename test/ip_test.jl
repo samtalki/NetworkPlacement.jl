@@ -60,31 +60,31 @@ end
 #----- Plot the greedy coverage and convergence
 t_select = 10
 plot(1:40,greedy_coverage_T[t_select][2:end],xlabel="Strategy size b",ylabel="Weighted coverage",title="Risk coverage vs. total chargers at time t = "*string(t_select))
-savefig("test/figures/greedy/greedy_coverage.pdf")
+savefig("test/figures/ip/greedy_coverage.pdf")
 
 
 #----- Plot the greedy coverage
 t_select = 10
 plot(1:40,greedy_objective_T[t_select][2:end],xlabel="Strategy size b",ylabel="Greedy objective",title="Objective value vs. total chargers at time t = "*string(t_select))
-savefig("test/figures/greedy/greedy_objective.pdf")
+savefig("test/figures/ip/greedy_objective.pdf")
 
 
 # ------ Plot the OBJECTIVE of the greedy and IP results vs b
 t_select = 10
 plot(b_values,greedy_objective_T[t_select][2:end],label="Greedy",xlabel="b",ylabel="Objective",title="Objective vs b at time t = "*string(t_select))
 plot!(b_values,ip_objective_T[t_select],label="IP")
-savefig("test/figures/greedy_vs_ip_objective.pdf")
+savefig("test/figures/ip/greedy_vs_ip_objective.pdf")
 
 
 # ------ Plot the COVERAGE of the greedy and IP results vs b
 t_select = 10
 plot(b_values,greedy_coverage_T[t_select][2:end],label="Greedy",xlabel="b",ylabel="Coverage",title="Coverage vs b at time t = "*string(t_select))
 plot!(b_values,ip_coverage_T[t_select],label="IP")
-savefig("test/figures/greedy_vs_ip_coverage.pdf")
+savefig("test/figures/ip/greedy_vs_ip_coverage.pdf")
 
 # plot the results in time
 
 
 # # # Plot the results vs time
 # time_plot = SP.plot_max_coverage(results_T)
-# savefig(time_plot,"test/figures/base_weighted_RTS_ip_max_coverage_time.pdf")
+# savefig(time_plot,"test/figures/ip/base_weighted_RTS_ip_max_coverage_time.pdf")

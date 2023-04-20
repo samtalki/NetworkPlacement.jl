@@ -11,7 +11,7 @@ Some examples of this task includes:
 
 ## Setup and Installation
 
-This package is not yet registered in the Julia package registry. To install it, you can clone this repository and then activate the package in the Julia REPL.
+This package is a propotype for the course CSE 8803: Urban Computing at the Georgia Institute of Technology. This package is not yet registered in the Julia package registry. To install it, you can clone this repository and then activate the package in the Julia REPL.
 
 While in the package directory, run the following commands in the REPL:
 ```julia 
@@ -21,12 +21,40 @@ julia> ] instantiate
 
 ## Usage
 
+### Implemented algorithms
 The package is currently under development. The following algorithms are implemented:
 
 - [x] Greedy
 - [x] Integer programming (IP)
 - [x] Min-max criticality
 
+### Reproducing Urban Computing project results
+The results presented in the project report can be reproduced by running the following commands in the REPL:
+
+
+#### Network risk graph
+```julia
+julia> ] activate .
+julia> include("tests/network_plot.jl")
+```
+
+#### Greedy algorithm test suite
+```julia
+julia> ] activate .
+julia> include("tests/greedy_test.jl")
+```
+
+#### Minimax criticality IP algorithm test suite
+```julia
+julia> ] activate .
+julia> include("tests/minimax_test.jl")
+```
+
+#### IP algorithm test suite
+```julia
+julia> ] activate .
+julia> include("tests/ip_test.jl")
+``` 
 
 ## Contributing
 
