@@ -12,7 +12,7 @@ function ip_max_coverage(F::AbstractMatrix,w::AbstractArray,b::Integer)
 	@variable(model,c[1:N_E],Bin) #Create a binary variabe for the coverage vector
 	@variable(model,x[1:N_V],Bin) #Create a binary vairable for the placement vector
 	@objective(model,Max,sum([w_e*c_e for (w_e,c_e) in zip(w,c)])) #Maximize the weighted sum of the coverage vector
-	@constraint(model,sum(x) <= b) #Cardinality constraint
+	@constraint(model,sum(x) == b) #Cardinality constraint
 	@constraint(model,c .<= F*x) #Coverage constraint (F*x is the detection vector)
 	optimize!(model) #Solve the model
 	return value.(x),objective_value(model) #Return the solution and objective value
@@ -25,9 +25,9 @@ Solve the maximum coverage integer program for a range of cardinality constraint
 function ip_max_coverage(F::AbstractMatrix,w::AbstractArray,b_range::AbstractArray)
 	iter_strategy,iter_objective = [],[] #Vectors to track the strategy and objective value
 	for b in b_range #For each cardinality constraint
-		x,iter_objective = solve_ip_max_coverage(F,w,b) #Solve the IP for this cardinality constraint
-		push!(iter_strategy,x) #Save the strategy
-		push!(iter_objective,iter_objective) #Save the objective value
+		x_b,obj_b = ip_max_coverage(F,w,b) #Solve the IP for this cardinality constraint
+		push!(iter_strategy,x_b) #Save the strategy
+		push!(iter_objective,obj_b) #Save the objective value
 	end
 	return iter_strategy,iter_objective #Return the iterations of the strategy and objective value
 end
@@ -60,7 +60,7 @@ function ip_min_max_vulnerability(F::AbstractMatrix,w::AbstractArray,b::Integer)
 
 	#--- Minimize the maximum vulnerability
 	optimize!(model) #Solve the model
-	return value.(x),objective_value(model) #Return the solution and objective value
+	return value.(K),value.(x),objective_value(model) #Return the solution and objective value
 end
 
 """
@@ -71,11 +71,12 @@ Parameters:
 - `b_range`: Range of cardinality constraints to solve the minimax problem
 """
 function ip_min_max_vulnerability(F::AbstractMatrix,w::AbstractArray,b_range::AbstractArray)
-	F_values,strategies = [],[] 
+	K_values,F_values,strategies = [],[],[] #Vectors to track the criticality, objective value, and strategy
 	for b in b_range 
-		x_b,obj_b = ip_min_max_vulnerability(F,w,b)
+		K_b,x_b,obj_b = ip_min_max_vulnerability(F,w,b) # criticality, strategy, objective value
+		push!(K_values,K_b)
 		push!(strategies,x_b)
 		push!(F_values,obj_b)
 	end
-	return F_values
+	return K_values,F_values,strategies
 end

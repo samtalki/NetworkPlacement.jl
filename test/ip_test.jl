@@ -8,53 +8,83 @@ net = SP.make_basic_network(SP.parse_file(path))
 
 # Load the 2021 wildfire risks
 risks = load("test/data/risks/risks_RTS_2021.jld2")["2021"]
-T = length(risks)
+T = length(risks) ÷ 5
 
 # Build the coverage matrix and weights
 F,W = SP.build_coverage_data(net,risks)
 
-# Solve the greedy algorithm at each time step
 b_values = 1:40
-results_T = [] #results as a function of time
-for (t,w) in enumerate(eachcol(W))
-    results = Dict{Int,Dict{String,Any}}()
-    #solve the greedy algorithm for all values of b at the current time step
-    for b in b_values
 
-        # -- Solve the integer programming problem --
-        iter_strategy,iter_objective = SP.ip_max_coverage(F,w,b) 
-        
-        # Save the strategy as a set to compute the coverage
-        S = Set()
-        for (i,s) in enumerate(iter_strategy)
+# Solutions of greedy algorithm at each time step
+greedy_strategy_T = [] #strategies as a function of b for each time step
+greedy_objective_T = [] #objective values as a function of b for each time step
+greedy_coverage_T = [] #coverage values as a function of b for each time step
+
+# Solutions of IP algorithm at each time step
+ip_strategy_T = [] #strategies as a function of b for each time step
+ip_objective_T = [] #objective values as a function of b for each time step
+ip_coverage_T = [] #coverage values as a function of b for each time step
+
+
+
+for t=1:T
+    w = W[:,t]
+    #-------------------- Greedy
+    #solve the greedy algorithm for the maximum value of b in b_values at the current time step
+    greedy_iter_objective_t,greedy_iter_coverage_t,greedy_S_t = SP.greedy_max_coverage(F,w,b_values[end])
+    # save the greedy results
+    push!(greedy_strategy_T,greedy_S_t)
+    push!(greedy_objective_T,greedy_iter_objective_t)
+    push!(greedy_coverage_T,greedy_iter_coverage_t)
+
+    #-------------------- IP
+    #solve the IP algorithm for all values of b in b_values at the current time step
+    ip_strategy_t,ip_iter_objective_t = SP.ip_max_coverage(F,w,b_values)
+    #compute the IP coverage at the current time step
+    ip_iter_coverage_t = []
+    for x in ip_strategy_t
+        S_t = Set()
+        for (i,s) in enumerate(x)
             if s == 1
-                S = union(S,Set([i]))
+                push!(S_t,i)
             end
         end
-
-        # Compute the coverage
-        iter_coverage = SP.coverage(S,F,w)
-
-        results[b] = Dict(
-            "iter_objective" => iter_objective,
-            "iter_coverage" => iter_coverage,
-            "S" => S
-        )
+        push!(ip_iter_coverage_t,SP.coverage(S_t,F,w))
     end
-    push!(results_T,results)
+    #save the IP results
+    push!(ip_strategy_T,ip_strategy_t)
+    push!(ip_objective_T,ip_iter_objective_t)
+    push!(ip_coverage_T,ip_iter_coverage_t)
 end
 
+#----- Plot the greedy coverage and convergence
+t_select = 10
+plot(1:40,greedy_coverage_T[t_select][2:end],xlabel="Strategy size b",ylabel="Weighted coverage",title="Risk coverage vs. total chargers at time t = "*string(t_select))
+savefig("test/figures/greedy/greedy_coverage.pdf")
 
 
-# # Plot the results vs strategy size
-t_select = 10 #random time to select risk value
-for b in b_values
-    _iter_objective,_iter_coverage = results_T[t_select][b]["iter_objective"],results_T[t_select][b]["iter_coverage"]
-    size_plot = SP.plot_max_coverage(_iter_objective,_iter_coverage)
-    savefig(size_plot,"test/figures/base_weighted_RTS_greedy_max_coverage_b"*string(b)*"_t_"*string(t_select)*".pdf")
-end
+#----- Plot the greedy coverage
+t_select = 10
+plot(1:40,greedy_objective_T[t_select][2:end],xlabel="Strategy size b",ylabel="Greedy objective",title="Objective value vs. total chargers at time t = "*string(t_select))
+savefig("test/figures/greedy/greedy_objective.pdf")
 
 
-# # Plot the results vs time
-time_plot = SP.plot_max_coverage(results_T)
-savefig(time_plot,"test/figures/base_weighted_RTS_ip_max_coverage_time.pdf")
+# ------ Plot the OBJECTIVE of the greedy and IP results vs b
+t_select = 10
+plot(b_values,greedy_objective_T[t_select][2:end],label="Greedy",xlabel="b",ylabel="Objective",title="Objective vs b at time t = "*string(t_select))
+plot!(b_values,ip_objective_T[t_select],label="IP")
+savefig("test/figures/greedy_vs_ip_objective.pdf")
+
+
+# ------ Plot the COVERAGE of the greedy and IP results vs b
+t_select = 10
+plot(b_values,greedy_coverage_T[t_select][2:end],label="Greedy",xlabel="b",ylabel="Coverage",title="Coverage vs b at time t = "*string(t_select))
+plot!(b_values,ip_coverage_T[t_select],label="IP")
+savefig("test/figures/greedy_vs_ip_coverage.pdf")
+
+# plot the results in time
+
+
+# # # Plot the results vs time
+# time_plot = SP.plot_max_coverage(results_T)
+# savefig(time_plot,"test/figures/base_weighted_RTS_ip_max_coverage_time.pdf")
