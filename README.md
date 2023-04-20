@@ -8,6 +8,17 @@ Some examples of this task includes:
 - Optimally placing EV chargers
 - Optimally placing electric generators
 
+## Urban Computing Project background
+### Project name:
+Electric power network charger placement for extreme event resilience via submodular optimization
+
+### Contributors:
+- Samuel Talkington
+- Utkarsh Nattamai Subramanian Rajkumar
+- Hassan Naveed
+
+### PDFs of report and presentation:
+These documents are located in the `docs` directory.
 
 ## Setup and Installation
 
@@ -68,3 +79,6 @@ The following algorithms need to be implemented:
 ### Contribution recommendations:
 Contributions are welcome! Please open an issue or a pull request if you have any suggestions or if you find any bugs.
 
+
+# Acknowledgements
+This material is based upon work supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. DGE-1650044. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
